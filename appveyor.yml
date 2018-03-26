@@ -6,14 +6,14 @@ image:
 - Ubuntu
 
 environment:
-  nodejs_version: 8.9.10
+  nodejs_version: 8.10
   DOTNET_SHARED_HOME: c:/projects/autorest.csharp/
   APPVEYOR_YML_DISABLE_PS_LINUX: true
 # stack: node 8.9.10, go 1.10, ruby 2.3, jdk 8
-stack: node 8.9.10
+stack: node 8.10
 
 install:
-- ps: Install-Product node $env:nodejs_version x64
+- ps: Install-Product node 8.10  x64
 - npm install 
 
 build_script:
