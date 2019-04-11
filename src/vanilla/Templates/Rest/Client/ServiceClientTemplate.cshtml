@@ -11,6 +11,10 @@ namespace @Settings.Namespace
 @foreach (var usingString in Model.Usings) {
     @:using @usingString;
 }
+@foreach (var externalNamespace in Model.ErrorTypes.Where(x => x.Extensions.ContainsKey("x-external-namespace")))
+{
+    @:using @externalNamespace.Extensions["x-external-namespace"].ToString();
+}
 @EmptyLine
     @if (!string.IsNullOrWhiteSpace(Model.Documentation))
     {
