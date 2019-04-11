@@ -136,13 +136,17 @@ namespace AutoRest.CSharp
         {
             foreach (CompositeTypeCs exceptionType in errorTypes)
             {
-                await Write(new ExceptionTemplate { Model = exceptionType },
-                    $"{GeneratedSourcesBaseFolder}{FolderModels}/{exceptionType.ExceptionTypeDefinitionName}{ImplementationFileExtension}");
-                
-                if(!existingModelTypes.Contains(exceptionType))
+                if ((bool) exceptionType.Extensions.GetValueOrDefault(SwaggerExtensions.ExternalExtension, false) != true)
                 {
-                    await Write(new ModelTemplate{ Model = exceptionType },
-                        $"{GeneratedSourcesBaseFolder}{FolderModels}/{exceptionType.Name}{ImplementationFileExtension}");
+
+                    await Write(new ExceptionTemplate {Model = exceptionType},
+                        $"{GeneratedSourcesBaseFolder}{FolderModels}/{exceptionType.ExceptionTypeDefinitionName}{ImplementationFileExtension}");
+
+                    if (!existingModelTypes.Contains(exceptionType))
+                    {
+                        await Write(new ModelTemplate {Model = exceptionType},
+                            $"{GeneratedSourcesBaseFolder}{FolderModels}/{exceptionType.Name}{ImplementationFileExtension}");
+                    }
                 }
             }
         }

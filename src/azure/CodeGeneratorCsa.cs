@@ -17,6 +17,7 @@ using AutoRest.CSharp.vanilla.Templates.Rest.Common;
 using AutoRest.Extensions.Azure;
 using static AutoRest.Core.Utilities.DependencyInjection;
 using System.Collections.Generic;
+using AutoRest.Extensions;
 
 namespace AutoRest.CSharp.Azure
 {
@@ -67,9 +68,12 @@ namespace AutoRest.CSharp.Azure
                     continue;
                 }
 
-                var exceptionTemplate = new ExceptionTemplate {Model = exceptionType};
-                await Write(exceptionTemplate,
-                     $"{GeneratedSourcesBaseFolder}{FolderModels}/{exceptionTemplate.Model.ExceptionTypeDefinitionName}{ImplementationFileExtension}");
+                if ((bool) exceptionType.Extensions.GetValueOrDefault(SwaggerExtensions.ExternalExtension, false) != true)
+                {
+                    var exceptionTemplate = new ExceptionTemplate {Model = exceptionType};
+                    await Write(exceptionTemplate,
+                        $"{GeneratedSourcesBaseFolder}{FolderModels}/{exceptionTemplate.Model.ExceptionTypeDefinitionName}{ImplementationFileExtension}");
+                }
             }
         }
     }
