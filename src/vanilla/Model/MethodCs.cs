@@ -50,14 +50,15 @@ namespace AutoRest.CSharp.Model
         /// <summary>
         /// Generate the method parameter declaration for async methods and extensions
         /// </summary>
-        public virtual string GetAsyncMethodParameterDeclaration() => GetAsyncMethodParameterDeclaration(false);
+        public virtual string GetAsyncMethodParameterDeclaration() => GetAsyncMethodParameterDeclaration(false, false);
 
         /// <summary>
         /// Generate the method parameter declaration for sync methods and extensions
         /// </summary>
         /// <param name="addCustomHeaderParameters">If true add the customHeader to the parameters</param>
+        /// <param name="addCustomQueryParameters">If true add the customQueryParameter to the parameters</param>
         /// <returns>Generated string of parameters</returns>
-        public virtual string GetSyncMethodParameterDeclaration(bool addCustomHeaderParameters)
+        public virtual string GetSyncMethodParameterDeclaration(bool addCustomHeaderParameters, bool addCustomQueryParameters)
         {
             List<string> declarations = new List<string>();
             foreach (var parameter in LocalParameters)
@@ -72,6 +73,11 @@ namespace AutoRest.CSharp.Model
                 declarations.Add("System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> customHeaders = null");
             }
 
+            if (addCustomQueryParameters)
+            {
+                declarations.Add("System.Collections.Generic.Dictionary<string, object> customQueryParameters = null");
+            }
+
             return string.Join(", ", declarations);
         }
 
@@ -79,10 +85,11 @@ namespace AutoRest.CSharp.Model
         /// Generate the method parameter declaration for async methods and extensions
         /// </summary>
         /// <param name="addCustomHeaderParameters">If true add the customHeader to the parameters</param>
+        /// <param name="addCustomQueryParameters">If true add the customQueryParameters to the parameters</param>
         /// <returns>Generated string of parameters</returns>
-        public virtual string GetAsyncMethodParameterDeclaration(bool addCustomHeaderParameters)
+        public virtual string GetAsyncMethodParameterDeclaration(bool addCustomHeaderParameters, bool addCustomQueryParameters)
         {
-            var declarations = this.GetSyncMethodParameterDeclaration(addCustomHeaderParameters);
+            var declarations = this.GetSyncMethodParameterDeclaration(addCustomHeaderParameters, addCustomQueryParameters);
 
             if (!string.IsNullOrEmpty(declarations))
             {
@@ -101,8 +108,8 @@ namespace AutoRest.CSharp.Model
         /// <summary>
         /// Get the invocation args for an invocation with an async method
         /// </summary>
-        public string GetAsyncMethodInvocationArgs(string customHeaderReference, string cancellationTokenReference = "cancellationToken") => 
-            string.Join(", ", LocalParameters.Select(each => (string)each.Name).Concat(new[] { customHeaderReference, cancellationTokenReference }));
+        public string GetAsyncMethodInvocationArgs(string customHeaderReference, string customQueryParametersReference, string cancellationTokenReference = "cancellationToken") => 
+            string.Join(", ", LocalParameters.Select(each => (string)each.Name).Concat(new[] { customHeaderReference, customQueryParametersReference, cancellationTokenReference }));
 
         /// <summary>
         /// Get the parameters that are actually method parameters in the order they appear in the method signature

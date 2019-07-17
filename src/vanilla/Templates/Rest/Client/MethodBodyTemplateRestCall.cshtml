@@ -63,6 +63,18 @@ else
 }    
 }
 @(Model.BuildUrl("_url"))
+// Add custom query parameters
+if (customQueryParameters != null)
+{
+    var uriBuilder = new System.UriBuilder(_url);
+    var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+    foreach (var customParam in customQueryParameters)
+    {
+        query[customParam.Key] = System.Uri.EscapeDataString(customParam.Value.ToString());
+    }
+    uriBuilder.Query = query.ToString();
+    _url = uriBuilder.Uri.ToString();
+}
 // Create HTTP transport objects
 var _httpRequest = new System.Net.Http.HttpRequestMessage();
 System.Net.Http.HttpResponseMessage _httpResponse = null;
